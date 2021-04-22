@@ -44,22 +44,7 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.place_details(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.\
-1957362&radius=100&types=food&name=harbour&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Nearby Search-Places API! Here is the \
-PoC link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Nearby Search-Places		|| $32 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Nearby Search-Places API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.nearby_search_places(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants+in+Sydney&key="
