@@ -1,6 +1,7 @@
 import requests
 import os
-from table import *
+import scanners
+import table
 
 
 def scan_gmaps(apikey):
@@ -9,38 +10,11 @@ def scan_gmaps(apikey):
     align = [("^", "<"), ("^", "<"), ("^", "<")]
     vulnerable_apis = []
 
-    url = (
-        "https://maps.googleapis.com/maps/api/staticmap?center=45%2C10&zoom=7&size=400x400&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.status_code == 200:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Staticmap API! Here is the PoC link which \
-can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Staticmap 			|| $2 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Staticmap API.")
-        print("Reason: " + str(response.content))
+    vulnerable_apis = scanners.custom_search(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,\
--73.988354&fov=90&heading=235&pitch=10&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.status_code == 200:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Streetview API! Here is the PoC \
-link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Streetview 			|| $7 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Streetview API.")
-        print("Reason: " + str(response.content))
+    vulnerable_apis = scanners.static_map(apikey, vulnerable_apis)
+
+    vulnerable_apis = scanners.street_view(apikey, vulnerable_apis)
 
     url = "https://www.google.com/maps/embed/v1/place?q=Seattle&key=" + apikey
     response = requests.get(url, verify=False)
