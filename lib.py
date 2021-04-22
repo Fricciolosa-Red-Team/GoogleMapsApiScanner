@@ -30,21 +30,7 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.autocomplete(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Elevation API! Here is the PoC link which \
-can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Elevation 			|| $5 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Elevation API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.elevation(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/timezone/json?location=39.6034810,-119.6822510&timestamp=1331161200&key="

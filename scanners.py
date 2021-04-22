@@ -257,3 +257,26 @@ which can be used directly via browser:"
         print("Reason: " + response.json()["error_message"])
 
     return vulnerable_apis
+
+
+def elevation(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Elevation API! Here is the PoC link which \
+can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Elevation", "5$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Elevation API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
