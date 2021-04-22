@@ -20,35 +20,9 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.embed_advanced(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Directions API! Here is the PoC link which \
-can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Directions 			|| $5 per 1000 requests")
-        vulnerable_apis.append("Directions (Advanced) 	|| $10 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Directions API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.directions(apikey, vulnerable_apis)
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40,30&key=" + apikey
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Geocode API! Here is the PoC link which \
-can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Geocode 			|| $5 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Geocode API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.geocode(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,\

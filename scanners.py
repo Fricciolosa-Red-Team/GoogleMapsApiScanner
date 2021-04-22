@@ -134,3 +134,48 @@ the PoC HTML code which can be used directly via browser:"
             print("Reason: " + str(response.content).split('"')[77])
 
     return vulnerable_apis
+
+
+def directions(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Directions API! Here is the PoC link which \
+can be used directly via browser:"
+        )
+        print(url)
+
+        api1 = ("Directions", "5$/1000 reqs.", url)
+        api2 = ("Directions (Advanced)", "5$/1000 reqs.", url)
+
+        vulnerable_apis.append(api1)
+        vulnerable_apis.append(api2)
+    else:
+        print("API key is not vulnerable for Directions API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
+
+
+def geocode(apikey, vulnerable_apis):
+    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40,30&key=" + apikey
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Geocode API! Here is the PoC link which \
+can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Geocode", "5$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Geocode API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
