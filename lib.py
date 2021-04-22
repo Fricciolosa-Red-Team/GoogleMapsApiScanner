@@ -36,56 +36,11 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.nearest_roads(apikey, vulnerable_apis)
 
-    url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + apikey
-    postdata = {"considerIp": "true"}
-    response = requests.post(url, data=postdata, verify=False)
-    if response.text.find("error") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0mfor Geolocation API! Here is the PoC curl command \
-which can be used from terminal:"
-        )
-        print(
-            "curl -i -s -k  -X $'POST' -H $'Host: www.googleapis.com' -H $'Content-Length: 22' --data-binary \
-$'{\"considerIp\": \"true\"}' $'"
-            + url
-            + "'"
-        )
-        vulnerable_apis.append("Geolocation 			|| $5 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Geolocation API.")
-        print("Reason: " + response.json()["error"]["message"])
+    vulnerable_apis = scanners.geolocation(apikey, vulnerable_apis)
 
-    url = (
-        "https://roads.googleapis.com/v1/snapToRoads?path=-35.27801,149.12958|-35.28032,149.12907&interpolate=true&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Route to Traveled API! Here is the PoC \
-link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Route to Traveled 		|| $10 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Route to Traveled API.")
-        print("Reason: " + response.json()["error"]["message"])
+    vulnerable_apis = scanners.route_to_traveled(apikey, vulnerable_apis)
 
-    url = (
-        "https://roads.googleapis.com/v1/speedLimits?path=38.75807927603043,-9.03741754643809&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Speed Limit-Roads API! Here is the PoC \
-link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Speed Limit-Roads 		|| $20 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Speed Limit-Roads API.")
-        print("Reason: " + response.json()["error"]["message"])
+    vulnerable_apis = scanners.speed_limit_roads(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4\
