@@ -179,3 +179,32 @@ can be used directly via browser:"
         print("Reason: " + response.json()["error_message"])
 
     return vulnerable_apis
+
+
+def distance_matrix(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,\
+-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C\
+-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.\
+659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.\
+659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Distance Matrix API! Here is the PoC link \
+which can be used directly via browser:"
+        )
+        print(url)
+
+        api1 = ("Distance Matrix", "5$/1000 reqs.", url)
+        api2 = ("Distance Matrix (Advanced)", "10$/1000 reqs.", url)
+
+        vulnerable_apis.append(api1)
+        vulnerable_apis.append(api2)
+    else:
+        print("API key is not vulnerable for Distance Matrix API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
