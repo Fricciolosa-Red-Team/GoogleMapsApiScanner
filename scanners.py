@@ -280,3 +280,26 @@ can be used directly via browser:"
         print("Reason: " + response.json()["error_message"])
 
     return vulnerable_apis
+
+
+def timezone(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/timezone/json?location=39.6034810,-119.6822510&timestamp=1331161200&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("errorMessage") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Timezone API! Here is the PoC link which \
+can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Timezone", "5$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Timezone API.")
+        print("Reason: " + response.json()["errorMessage"])
+
+    return vulnerable_apis
