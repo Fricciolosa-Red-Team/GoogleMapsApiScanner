@@ -42,22 +42,7 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.speed_limit_roads(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4\
-&fields=name,rating,formatted_phone_number&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Place Details API! Here is the PoC \
-link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Place Details 		|| $17 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Place Details API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.place_details(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.\
