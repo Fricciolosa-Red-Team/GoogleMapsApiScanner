@@ -63,9 +63,38 @@ link which can be used directly via browser:"
 
         api = ("Streetview", "7$/1000 reqs.", url)
 
-        vulnerable_apis.append("Streetview 			|| $7 per 1000 requests")
+        vulnerable_apis.append(api)
     else:
         print("API key is not vulnerable for Streetview API.")
+        print("Reason: " + str(response.content))
+
+    return vulnerable_apis
+
+
+def embed_basic(apikey, vulnerable_apis):
+    url = "https://www.google.com/maps/embed/v1/place?q=Seattle&key=" + apikey
+    response = requests.get(url, verify=False)
+    if response.status_code == 200:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Embed (Basic) API! Here is \
+the PoC HTML code which can be used directly via browser:"
+        )
+        print(
+            '<iframe width="600" height="450" frameborder="0" style="border:0" src="'
+            + url
+            + '" allowfullscreen></iframe>'
+        )
+        poc = (
+            '<iframe width="600" height="450" frameborder="0" style="border:0" src="'
+            + url
+            + '" allowfullscreen></iframe>'
+        )
+
+        api = ("embed basic", "Free", poc)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Embed (Basic) API.")
         print("Reason: " + str(response.content))
 
     return vulnerable_apis
