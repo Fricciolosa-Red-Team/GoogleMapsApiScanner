@@ -232,3 +232,28 @@ PoC link which can be used directly via browser:"
         print("Reason: " + response.json()["error_message"])
 
     return vulnerable_apis
+
+
+def autocomplete(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Bingh&types=%28cities%29&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Autocomplete API! Here is the PoC link \
+which can be used directly via browser:"
+        )
+        print(url)
+
+        api1 = ("Autocomplete", "2.83$/1000 reqs", url)
+        api2 = ("Autocomplete Per Session", "17$/1000 reqs", url)
+
+        vulnerable_apis.append(api1)
+        vulnerable_apis.append(api2)
+    else:
+        print("API key is not vulnerable for Autocomplete API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
