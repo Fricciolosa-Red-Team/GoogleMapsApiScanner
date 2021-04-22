@@ -303,3 +303,27 @@ can be used directly via browser:"
         print("Reason: " + response.json()["errorMessage"])
 
     return vulnerable_apis
+
+
+def nearest_roads(apikey, vulnerable_apis):
+    url = (
+        "https://roads.googleapis.com/v1/nearestRoads?points=60.170880,24.942795|60.170879,24.942796|\
+60.170877,24.942796&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Nearest Roads API! Here is the PoC link which \
+can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Nearest roads", "10$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Nearest Roads API.")
+        print("Reason: " + response.json()["error"]["message"])
+
+    return vulnerable_apis

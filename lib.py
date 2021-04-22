@@ -34,22 +34,7 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.timezone(apikey, vulnerable_apis)
 
-    url = (
-        "https://roads.googleapis.com/v1/nearestRoads?points=60.170880,24.942795|60.170879,24.942796|\
-60.170877,24.942796&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Nearest Roads API! Here is the PoC link which \
-can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Nearest Roads 		|| $10 per 1000 requests")
-    else:
-        print("API key is not vulnerable for Nearest Roads API.")
-        print("Reason: " + response.json()["error"]["message"])
+    vulnerable_apis = scanners.nearest_roads(apikey, vulnerable_apis)
 
     url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + apikey
     postdata = {"considerIp": "true"}
