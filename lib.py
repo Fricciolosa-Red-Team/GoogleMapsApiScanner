@@ -26,22 +26,7 @@ def scan_gmaps(apikey):
 
     vulnerable_apis = scanners.distance_matrix(apikey, vulnerable_apis)
 
-    url = (
-        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemp\
-orary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key="
-        + apikey
-    )
-    response = requests.get(url, verify=False)
-    if response.text.find("error_message") < 0:
-        print(
-            "API key is \033[1;31;40m vulnerable \033[0m for Find Place From Text API! Here is the \
-PoC link which can be used directly via browser:"
-        )
-        print(url)
-        vulnerable_apis.append("Find Place From Text 		|| $17 per 1000 elements")
-    else:
-        print("API key is not vulnerable for Find Place From Text API.")
-        print("Reason: " + response.json()["error_message"])
+    vulnerable_apis = scanners.find_place_from_text(apikey, vulnerable_apis)
 
     url = (
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Bingh&types=%28cities%29&key="
