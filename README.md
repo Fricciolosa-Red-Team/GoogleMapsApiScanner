@@ -1,6 +1,10 @@
 # GoogleMapsApiScanner
 **Codebase taken from** https://github.com/ozguralp/gmapsapiscanner  
 
+This program is intended to take as input a Google Maps Api Key and scan which services you can use.  
+Moreover, it produces a markdown useful for Bug Bounty report.  
+Keep in mind that this type of Information exposed has a really low impact.   
+
 ## Checked APIs:
 - Staticmap API
 - Streetview API
