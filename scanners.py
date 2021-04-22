@@ -448,3 +448,158 @@ PoC link which can be used directly via browser:"
         print("Reason: " + response.json()["error_message"])
 
     return vulnerable_apis
+
+
+def text_search_places(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants+in+Sydney&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False)
+    if response.text.find("error_message") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Text Search-Places API! Here is the PoC \
+link which can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Text Search Places", "32$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Text Search-Places API.")
+        print("Reason: " + response.json()["error_message"])
+
+    return vulnerable_apis
+
+
+def places_photo(apikey, vulnerable_apis):
+    url = (
+        "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_\
+9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL\
+4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key="
+        + apikey
+    )
+    response = requests.get(url, verify=False, allow_redirects=False)
+    if response.status_code == 302:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0m for Places Photo API! Here is the PoC link \
+which can be used directly via browser:"
+        )
+        print(url)
+
+        api = ("Places Photo", "7$/1000 reqs.", url)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Places Photo API.")
+        print(
+            "Reason: Verbose responses are not enabled for this API, cannot determine the reason."
+        )
+
+    return vulnerable_apis
+
+
+def playable_locations(apikey, vulnerable_apis):
+    url = (
+        "https://playablelocations.googleapis.com/v3:samplePlayableLocations?key="
+        + apikey
+    )
+    postdata = {
+        "area_filter": {"s2_cell_id": 7715420662885515264},
+        "criteria": [
+            {
+                "gameObjectType": 1,
+                "filter": {"maxLocationCount": 4, "includedTypes": ["food_and_drink"]},
+                "fields_to_return": {"paths": ["name"]},
+            },
+            {
+                "gameObjectType": 2,
+                "filter": {"maxLocationCount": 4},
+                "fields_to_return": {"paths": ["types", "snapped_point"]},
+            },
+        ],
+    }
+    response = requests.post(url, data=postdata, verify=False)
+    if response.text.find("error") < 0:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0mfor Playable Locations API! Here is the \
+PoC curl command which can be used from terminal:"
+        )
+        poc = (
+            'curl -i -s -k  -X $\'POST\' -H $\'Host: playablelocations.googleapis.com\' \
+-H $\'Content-Length: 302\' --data-binary $\'{"area_filter":{"s2_cell_id":77154206628855152\
+64},"criteria":[{"gameObjectType":1,"filter":{"maxLocationCount":4,"includedTypes":["fo\
+od_and_drink"]},"fields_to_return": {"paths": ["name"]}},{"gameObjectType":2,"filter":{"maxLoca\
+tionCount":4},"fields_to_return": {"paths": ["types", "snapped_point"]}}]}\' $\''
+            + url
+            + "'"
+        )
+        print(poc)
+
+        api = ("Playable Locations", "10$/1000 daily active users", poc)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for Playable Locations API.")
+        print("Reason: " + response.json()["error"]["message"])
+
+    return vulnerable_apis
+
+
+def fcm_takeover(apikey, vulnerable_apis):
+    url = "https://fcm.googleapis.com/fcm/send"
+    postdata = "{'registration_ids':['ABC']}"
+    response = requests.post(
+        url,
+        data=postdata,
+        verify=False,
+        headers={"Content-Type": "application/json", "Authorization": "key=" + apikey},
+    )
+    if response.status_code == 200:
+        print(
+            "API key is \033[1;31;40m vulnerable \033[0mfor FCM API! Here is the PoC curl \
+command which can be used from terminal:"
+        )
+        poc = (
+            'curl --header "Authorization: key='
+            + apikey
+            + '" --header Content-Type:"application/json" https://fcm.googleapis.com/fc\
+m/send -d \'{"registration_ids":["ABC"]}\''
+        )
+        print(poc)
+
+        api = ("FCM Takeover", "https://abss.me/posts/fcm-takeover/", poc)
+
+        vulnerable_apis.append(api)
+    else:
+        print("API key is not vulnerable for FCM API.")
+        for lines in response.iter_lines():
+            if ("TITLE") in str(lines):
+                print(
+                    "Reason: "
+                    + str(lines).split("TITLE")[1].split("<")[0].replace(">", "")
+                )
+
+    return vulnerable_apis
+
+
+def js_test(apikey):
+    f = open("jsapi_test.html", "w+")
+    f.write(
+        '<!DOCTYPE html><html><head><script src="https://maps.googleapis.com/maps/api/js?key='
+        + apikey
+        + '&callback=initMap&libraries=&v=weekly" defer></script><style type="text/cs\
+s">#map{height:100%;}html,body{height:100%;margin:0;padding:0;}</style><script>let map;func\
+tion initMap(){map=new google.maps.Map(document.getElementById("map"),{center:{lat:-34\
+.397,lng:150.644},zoom:8,});}</script></head><body><div id="map"></div></body></html>'
+    )
+    f.close()
+    print(
+        "jsapi_test.html file is created for manual confirmation. Open it at your \
+browser and observe whether the map is successfully loaded or not."
+    )
+    print(
+        "If you see 'Sorry! Something went wrong.' error on the page, it means \
+that API key is not allowed to be used at JavaScript API."
+    )
