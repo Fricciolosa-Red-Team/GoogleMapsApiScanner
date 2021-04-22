@@ -27,3 +27,14 @@
 
 ***Semi-Auto Checked APIs:***
 - JavaScript API
+
+
+## Installation
+
+- `git clone https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner.git`
+- `cd GoogleMapsApiScanner`
+- `python gmaps.py`
+
+## License
+
+This repository is under [MIT License](https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner/blob/main/LICENSE)
