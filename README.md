@@ -5,6 +5,12 @@ This program is intended to take as input a Google Maps Api Key and scan which s
 Moreover, it produces a markdown useful for Bug Bounty report.  
 Keep in mind that this type of Information exposed has a really low impact.   
 
+## Installation
+
+- `git clone https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner.git`
+- `cd GoogleMapsApiScanner`
+- `python gmaps.py`
+
 ## Checked APIs:
 - Staticmap API
 - Streetview API
@@ -32,12 +38,6 @@ Keep in mind that this type of Information exposed has a really low impact.
 ***Semi-Auto Checked APIs:***
 - JavaScript API
 
-
-## Installation
-
-- `git clone https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner.git`
-- `cd GoogleMapsApiScanner`
-- `python gmaps.py`
 
 ## License
 
