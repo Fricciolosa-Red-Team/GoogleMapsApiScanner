@@ -9,7 +9,7 @@ Keep in mind that this type of Information exposed has a really low impact.
 - `git clone https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner.git`
 - `cd GoogleMapsApiScanner`
 - `pip install requests`
-- `python gmaps.py -a AizaXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+- `python3 gmaps.py -a AizaXXXXXXXXXXXXXXXXXXXXXXXXXXX`
 
 ## Checked APIs:
 - Staticmap API
